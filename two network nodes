@@ -1,0 +1,58 @@
+
+This code sets up two network nodes, Node A and Node B, and exchanges information between them using a TCP socket connection. Node A sends a message to Node B, which receives the message, sends a response back, and closes the connection.
+
+To use this code, you'll need to replace the IP addresses and ports with the appropriate values for your network.
+
+The topic of this code is exchanging information between network nodes, which can be useful for building distributed systems, communicating between servers, or implementing network protocols. The code demonstrates how to create and connect sockets, send and receive data, and handle incoming connections.
+
+
+=====
+Node A:
+import socket
+
+# Replace with the IP address and port of Node B
+ip_address = '192.168.0.2'
+port = 1234
+
+# Create a TCP socket and connect to Node B
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((ip_address, port))
+
+# Send data to Node B
+data = "Hello, Node B!"
+client_socket.send(data.encode())
+
+# Receive data from Node B
+response = client_socket.recv(1024).decode()
+print(f"Received from Node B: {response}")
+
+# Close the connection
+client_socket.close()
+=====
+Node B:
+
+import socket
+
+# Replace with the IP address and port of Node A
+ip_address = '192.168.0.1'
+port = 1234
+
+# Create a TCP socket and listen for incoming connections
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind((ip_address, port))
+server_socket.listen(1)
+
+# Accept incoming connections and receive data
+print("Waiting for connection...")
+client_socket, client_address = server_socket.accept()
+print(f"Connection from {client_address}")
+data = client_socket.recv(1024).decode()
+print(f"Received from Node A: {data}")
+
+# Send data back to Node A
+response = "Hello, Node A!"
+client_socket.send(response.encode())
+
+# Close the connection
+client_socket.close()
+server_socket.close()
